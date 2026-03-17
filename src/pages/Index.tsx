@@ -1,16 +1,71 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useRef, useState } from "react";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import UploadZone from "@/components/UploadZone";
+import Features from "@/components/Features";
+import HowItWorks from "@/components/HowItWorks";
+import FAQ from "@/components/FAQ";
+import Footer from "@/components/Footer";
+import AnalysisDashboard, { type AnalysisResult } from "@/components/AnalysisDashboard";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+export default function Index() {
+  const uploadRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const { toast } = useToast();
+
+  const handleScrollToUpload = () => {
+    uploadRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleAnalyze = async (resumeText: string, jobDescription: string) => {
+    setIsLoading(true);
+    setResult(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("analyze-resume", {
+        body: { resumeText, jobDescription },
+      });
+
+      if (error) throw error;
+      if (!data) throw new Error("No data returned");
+
+      setResult(data as AnalysisResult);
+
+      // Scroll to results
+      setTimeout(() => {
+        document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } catch (err: unknown) {
+      console.error("Analysis error:", err);
+      toast({
+        title: "Analysis failed",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <Hero onScrollToUpload={handleScrollToUpload} />
+      <UploadZone ref={uploadRef} onAnalyze={handleAnalyze} isLoading={isLoading} />
+
+      {result && (
+        <div id="results">
+          <AnalysisDashboard result={result} />
+        </div>
+      )}
+
+      <Features />
+      <HowItWorks />
+      <FAQ />
+      <Footer />
     </div>
   );
-};
-
-const Index = PlaceholderIndex;
-
-export default Index;
+}

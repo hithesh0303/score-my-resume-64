@@ -47,6 +47,7 @@ export default function Navbar() {
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
       </div>
+      
 
       {open && (
         <div className="md:hidden border-t bg-card p-4 space-y-1">

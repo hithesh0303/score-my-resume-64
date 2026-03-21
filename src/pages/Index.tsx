@@ -19,6 +19,10 @@ export default function Index() {
   const handleScrollToUpload = () => {
     uploadRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  <a href="/free-ats-resume-checker">
+  Free ATS Resume Checker
+</a>
+
 
   const handleAnalyze = async (resumeText: string, jobDescription: string) => {
     setIsLoading(true);

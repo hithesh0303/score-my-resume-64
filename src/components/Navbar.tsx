@@ -21,7 +21,6 @@ export default function Navbar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <FileText className="h-4 w-4 text-primary-foreground" />
           </div>
-          <img src="/favicon.ico" alt="logo" style={{ height: "40px" }} />
           <span className="text-foreground">ATS</span>
           <span className="text-primary">Checker</span>
         </Link>

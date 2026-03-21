@@ -1,3 +1,4 @@
+import FreeATSChecker from "./pages/FreeATSChecker";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
@@ -17,6 +18,7 @@ const App = () => (
       <Toaster />
       <BrowserRouter>
         <Routes>
+          <Route path="/free-ats-resume-checker" element={<FreeATSChecker />} />
           <Route path="/" element={<Index />} />
           <Route path="/builder" element={<Builder />} />
           <Route path="/templates" element={<Templates />} />
